@@ -20,12 +20,12 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(join(__dirname, 'dist')));
-  
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(join(__dirname, "dist")));
+
   // Handle client-side routing
-  app.get('*', (req, res) => {
-    res.sendFile(join(__dirname, 'dist', 'index.html'));
+  app.get("*", (req, res) => {
+    res.sendFile(join(__dirname, "dist", "index.html"));
   });
 }
 
