@@ -1,38 +1,8 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist",
-        "zeroConfig": true
-      }
-    },
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "^/assets/(.*)",
-      "dest": "/dist/assets/$1"
-    },
-    {
-      "src": "^/favicon.(ico|png)",
-      "dest": "/dist/favicon.$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/dist/index.html",
-      "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate"
-      }
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
