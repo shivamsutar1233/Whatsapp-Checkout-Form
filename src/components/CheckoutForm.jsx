@@ -282,6 +282,7 @@ function CheckoutForm() {
                   required
                   inputProps={{
                     pattern: "[0-9]{10}",
+                    maxLength: 10,
                     title: "Please enter a valid 10-digit phone number",
                   }}
                   className="md:col-span-2"
@@ -355,6 +356,9 @@ function CheckoutForm() {
                   value={formData.shippingPincode}
                   onChange={handleInputChange}
                   required
+                  inputProps={{
+                    maxLength: 6,
+                  }}
                 />
               </Box>
 
@@ -444,8 +448,8 @@ function CheckoutForm() {
                 </>
               )}
 
-              <Box className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mt-4">
-                <TextField
+              {/* <Box className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mt-4"> */}
+              {/* <TextField
                   fullWidth
                   label="Quantity"
                   name="quantity"
@@ -456,12 +460,12 @@ function CheckoutForm() {
                   inputProps={{
                     min: 1,
                   }}
-                />
+                /> */}
 
-                <Typography variant="h6" className="text-right text-gray-800">
-                  Total: ₹{formData.totalAmount}
-                </Typography>
-              </Box>
+              <Typography variant="h6" className="text-right text-gray-800">
+                Total: ₹{formData.totalAmount}
+              </Typography>
+              {/* </Box>. */}
 
               <Button
                 type="submit"
