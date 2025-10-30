@@ -38,9 +38,7 @@ function CheckoutForm() {
         }
 
         // Fetch order details from the server
-        const response = await fetch(
-          `http://localhost:5000/api/order-link/${linkId}`
-        );
+        const response = await fetch(`${BASE_API_URL}/order-link/${linkId}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch order details");
@@ -90,6 +88,8 @@ function CheckoutForm() {
     // orderId: randomUUID(),
   });
 
+  const BASE_API_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   const handleInputChange = (e) => {
@@ -137,7 +137,7 @@ function CheckoutForm() {
         handler: async (response) => {
           try {
             // Send data to backend
-            const res = await fetch("http://localhost:5000/api/saveToSheet", {
+            const res = await fetch(`${BASE_API_URL}/saveToSheet`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

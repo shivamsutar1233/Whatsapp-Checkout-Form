@@ -33,6 +33,8 @@ const AdminPage = () => {
     message: "",
     severity: "info",
   });
+  const BASE_API_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
   useEffect(() => {
     // Check for existing authentication
@@ -46,7 +48,7 @@ const AdminPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      const response = await fetch(`${BASE_API_URL}/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +102,7 @@ const AdminPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/products", {
+      const response = await fetch(`${BASE_API_URL}/products`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -171,7 +173,7 @@ const AdminPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/generate-link", {
+      const response = await fetch(`${BASE_API_URL}/generate-link`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
