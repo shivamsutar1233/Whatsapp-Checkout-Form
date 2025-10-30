@@ -131,7 +131,7 @@ function CheckoutForm() {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: formData.totalAmount * 100, // Razorpay expects amount in paise
         currency: "INR",
-        name: "Your Company Name",
+        name: "Divarch Studio",
         description: "Product Purchase",
         handler: async (response) => {
           try {
