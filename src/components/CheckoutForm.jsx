@@ -25,15 +25,16 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
+  // const BASE_API_URL = "http://localhost:5000/api";
   const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
+  // Get linkId from URL path
+  const path = window.location.pathname;
+  const linkId = path.split("/").pop();
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
-        // Get linkId from URL path
-        const path = window.location.pathname;
-        const linkId = path.split("/").pop();
-
         if (!linkId) {
           throw new Error("Invalid checkout link");
         }
@@ -46,6 +47,8 @@ function CheckoutForm() {
         }
 
         const { data } = await response.json();
+        console.log(data);
+
         setProductDetails(data);
 
         // Update form with total amount
@@ -148,11 +151,23 @@ function CheckoutForm() {
                 paymentId: response.razorpay_payment_id,
                 timestamp: new Date().toISOString(),
               }),
-            });
+            }).then(() =>
+              fetch(`${BASE_API_URL}/update-payment-status`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  paymentStatus: "PAID",
+                  linkId: linkId,
+                }),
+              })
+            );
 
             if (res.ok) {
-              alert("Payment successful and data saved!");
+              // alert("Payment successful and data saved!");
               // Reset form
+              setPaymentSuccessful(true);
               setFormData({
                 phoneNumber: "",
                 firstName: "",
@@ -197,6 +212,30 @@ function CheckoutForm() {
       alert("Error initiating payment. Please try again.");
     }
   };
+
+  if (productDetails?.paymentStatus === "PAID" || paymentSuccessful) {
+    return (
+      <Container
+        maxWidth="sm"
+        className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl"
+      >
+        {/* <Paper className="p-4 md:p-6 shadow-lg bg-transparent"> */}
+        <Typography
+          variant={isMobile ? "h5" : "h4"}
+          className="mb-8! text-center text-gray-800"
+        >
+          Payment Successful
+        </Typography>
+        <Typography variant="body1" className="text-center text-blue-600">
+          Your orderId: {productDetails.linkId}
+        </Typography>
+        <Typography variant="body1" className="text-center text-green-00">
+          Thank you for your purchase! Your payment has already been received.
+        </Typography>
+        {/* </Paper> */}
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm" className="mt-8 px-4">

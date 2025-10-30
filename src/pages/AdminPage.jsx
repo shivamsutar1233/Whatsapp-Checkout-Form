@@ -34,6 +34,7 @@ const AdminPage = () => {
     severity: "info",
   });
 
+  //   const BASE_URL = "http://localhost:5000/api";
   const BASE_URL = "https://whats-form-backend.vercel.app/api";
 
   axios.defaults.baseURL = BASE_URL;
