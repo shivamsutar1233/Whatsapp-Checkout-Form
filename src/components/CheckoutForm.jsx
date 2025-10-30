@@ -26,6 +26,7 @@ function CheckoutForm() {
   const [error, setError] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
   const [paymentSuccessful, setPaymentSuccessful] = useState(false);
+  const [paymentInProgress, setPaymentInProgress] = useState(false);
   // const BASE_API_URL = "http://localhost:5000/api";
   const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
   // Get linkId from URL path
@@ -108,6 +109,7 @@ function CheckoutForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPaymentInProgress(true);
 
     try {
       // Prepare final form data including billing address
@@ -168,6 +170,7 @@ function CheckoutForm() {
               // alert("Payment successful and data saved!");
               // Reset form
               setPaymentSuccessful(true);
+              setPaymentInProgress(false);
               setFormData({
                 phoneNumber: "",
                 firstName: "",
@@ -327,6 +330,7 @@ function CheckoutForm() {
                     title: "Please enter a valid 10-digit phone number",
                   }}
                   className="md:col-span-2"
+                  disabled={paymentInProgress}
                 />
 
                 <TextField
@@ -336,6 +340,7 @@ function CheckoutForm() {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   required
+                  disabled={paymentInProgress}
                 />
 
                 <TextField
@@ -345,6 +350,7 @@ function CheckoutForm() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   required
+                  disabled={paymentInProgress}
                 />
               </Box>
 
@@ -362,6 +368,7 @@ function CheckoutForm() {
                 multiline
                 rows={1}
                 className="mt-4"
+                disabled={paymentInProgress}
               />
               <TextField
                 fullWidth
@@ -372,6 +379,7 @@ function CheckoutForm() {
                 multiline
                 rows={1}
                 className="mt-4"
+                disabled={paymentInProgress}
               />
               <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <TextField
@@ -381,6 +389,7 @@ function CheckoutForm() {
                   value={formData.shippingCity}
                   onChange={handleInputChange}
                   required
+                  disabled={paymentInProgress}
                 />
                 <TextField
                   fullWidth
@@ -389,6 +398,7 @@ function CheckoutForm() {
                   value={formData.shippingState}
                   onChange={handleInputChange}
                   required
+                  disabled={paymentInProgress}
                 />
                 <TextField
                   fullWidth
@@ -400,6 +410,7 @@ function CheckoutForm() {
                   inputProps={{
                     maxLength: 6,
                   }}
+                  disabled={paymentInProgress}
                 />
               </Box>
 
@@ -449,6 +460,7 @@ function CheckoutForm() {
                     multiline
                     rows={1}
                     className="mt-4"
+                    disabled={paymentInProgress}
                   />
                   <TextField
                     fullWidth
@@ -459,6 +471,7 @@ function CheckoutForm() {
                     multiline
                     rows={1}
                     className="mt-4"
+                    disabled={paymentInProgress}
                   />
                   <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <TextField
@@ -468,6 +481,7 @@ function CheckoutForm() {
                       value={formData.billingCity}
                       onChange={handleInputChange}
                       required
+                      disabled={paymentInProgress}
                     />
                     <TextField
                       fullWidth
@@ -476,6 +490,7 @@ function CheckoutForm() {
                       value={formData.billingState}
                       onChange={handleInputChange}
                       required
+                      disabled={paymentInProgress}
                     />
                     <TextField
                       fullWidth
@@ -484,6 +499,7 @@ function CheckoutForm() {
                       value={formData.billingPincode}
                       onChange={handleInputChange}
                       required
+                      disabled={paymentInProgress}
                     />
                   </Box>
                 </>
@@ -515,7 +531,11 @@ function CheckoutForm() {
                 className="mt-6 bg-blue-600 hover:bg-blue-700 py-3 text-lg"
                 disabled={!productDetails}
               >
-                Proceed to Pay
+                {paymentInProgress ? (
+                  <CircularProgress size={24} color="white" />
+                ) : (
+                  "Proceed to Pay"
+                )}
               </Button>
             </form>
           </>
