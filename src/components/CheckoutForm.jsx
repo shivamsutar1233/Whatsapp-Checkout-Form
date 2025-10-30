@@ -25,6 +25,7 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
+  const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -88,7 +89,6 @@ function CheckoutForm() {
     // orderId: randomUUID(),
   });
 
-  const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   const handleInputChange = (e) => {
