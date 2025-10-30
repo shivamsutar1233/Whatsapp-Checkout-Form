@@ -88,7 +88,7 @@ function CheckoutForm() {
     // orderId: randomUUID(),
   });
 
-  const BASE_API_URL = "/api";
+  const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   const handleInputChange = (e) => {

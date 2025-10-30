@@ -34,9 +34,9 @@ const AdminPage = () => {
     severity: "info",
   });
 
-  const BASE_URL = "/api";
+  const BASE_URL = "https://whats-form-backend.vercel.app/api";
 
-  axios.defaults.baseURL = BASE_URL;
+  axios.defaults.baseURL = import.meta.env.VITE_API_URL;
   const BASE_API_URL = BASE_URL;
 
   useEffect(() => {
