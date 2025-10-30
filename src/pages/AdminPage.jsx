@@ -19,7 +19,7 @@ import {
   Alert,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import axios from "axios";
 const AdminPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
@@ -33,6 +33,8 @@ const AdminPage = () => {
     message: "",
     severity: "info",
   });
+  axios.defaults.baseURL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
   const BASE_API_URL =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
@@ -48,15 +50,8 @@ const AdminPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${BASE_API_URL}/admin/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginForm),
-      });
-
-      const data = await response.json();
+      const response = await axios.post("/admin/login", loginForm);
+      const data = response.data;
 
       if (data.success) {
         localStorage.setItem("adminToken", data.token);
