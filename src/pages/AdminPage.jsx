@@ -33,10 +33,11 @@ const AdminPage = () => {
     message: "",
     severity: "info",
   });
-  axios.defaults.baseURL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-  const BASE_API_URL =
-    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+  const BASE_URL = "/api";
+
+  axios.defaults.baseURL = BASE_URL;
+  const BASE_API_URL = BASE_URL;
 
   useEffect(() => {
     // Check for existing authentication
