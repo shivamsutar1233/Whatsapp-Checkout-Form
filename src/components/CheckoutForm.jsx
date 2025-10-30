@@ -88,8 +88,7 @@ function CheckoutForm() {
     // orderId: randomUUID(),
   });
 
-  const BASE_API_URL =
-    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const BASE_API_URL = "/api";
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   const handleInputChange = (e) => {
