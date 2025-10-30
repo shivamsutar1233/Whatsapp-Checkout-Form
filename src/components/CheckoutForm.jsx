@@ -133,6 +133,8 @@ function CheckoutForm() {
         currency: "INR",
         name: "Divarch Studio",
         description: "Product Purchase",
+        image:
+          "https://image2url.com/images/1761809374701-1011f9d6-f488-4893-b879-b1db04d34712.png", // You can add your logo URL here
         handler: async (response) => {
           try {
             // Send data to backend
