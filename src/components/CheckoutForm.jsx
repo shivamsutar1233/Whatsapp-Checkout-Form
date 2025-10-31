@@ -71,6 +71,7 @@ function CheckoutForm() {
 
   const [formData, setFormData] = useState({
     phoneNumber: "",
+    email: "",
     firstName: "",
     lastName: "",
     // Shipping Address
@@ -152,6 +153,29 @@ function CheckoutForm() {
                 ...finalFormData,
                 paymentId: response.razorpay_payment_id,
                 timestamp: new Date().toISOString(),
+                unitPrice: productDetails
+                  ? productDetails.products[0].price
+                  : 0,
+                SKU: productDetails ? productDetails.products[0].SKU : "",
+                weightOfShipment: productDetails
+                  ? productDetails.products[0].weight
+                  : 0,
+                lengthOfShipment: productDetails
+                  ? productDetails.products[0].length
+                  : 0,
+                breadthOfShipment: productDetails
+                  ? productDetails.products[0].breadth
+                  : 0,
+                heightOfShipment: productDetails
+                  ? productDetails.products[0].height
+                  : 0,
+                isThisMultipleProductOrder: productDetails
+                  ? productDetails.products.length > 1
+                  : false,
+                productName: productDetails
+                  ? productDetails.products[0].name
+                  : "",
+                orderId: linkId,
               }),
             }).then(() =>
               fetch(`${BASE_API_URL}/update-payment-status`, {
@@ -173,6 +197,7 @@ function CheckoutForm() {
               setPaymentInProgress(false);
               setFormData({
                 phoneNumber: "",
+                email: "",
                 firstName: "",
                 lastName: "",
                 shippingAddressLine1: "",
@@ -329,6 +354,16 @@ function CheckoutForm() {
                     maxLength: 10,
                     title: "Please enter a valid 10-digit phone number",
                   }}
+                  className="md:col-span-2"
+                  disabled={paymentInProgress}
+                />
+                <TextField
+                  fullWidth
+                  label="Email(optional)"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  type="email"
                   className="md:col-span-2"
                   disabled={paymentInProgress}
                 />

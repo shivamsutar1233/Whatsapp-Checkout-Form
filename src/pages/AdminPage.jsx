@@ -17,6 +17,7 @@ import {
   TableHead,
   TableRow,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -28,6 +29,8 @@ const AdminPage = () => {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [quantity, setQuantity] = useState("1");
   const [generatedLink, setGeneratedLink] = useState("");
+  const [linkGenerationInProgress, setLinkGenerationInProgress] =
+    useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -130,15 +133,28 @@ const AdminPage = () => {
     const product = products.find((p) => p.id === selectedProductId);
     if (!product) return;
 
-    setSelectedProducts((prev) => [
-      ...prev,
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: parseInt(quantity),
-      },
-    ]);
+    setSelectedProducts((prev) => {
+      if (prev.find((p) => p.id === product.id)) {
+        return prev.map((p) => {
+          if (p.id === product.id) {
+            return {
+              ...p,
+              quantity: p.quantity + parseInt(quantity),
+            };
+          }
+          return p;
+        });
+      }
+      return [
+        ...prev,
+        {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: parseInt(quantity),
+        },
+      ];
+    });
 
     setSelectedProductId("");
     setQuantity("1");
@@ -149,6 +165,7 @@ const AdminPage = () => {
   };
 
   const handleGenerateLink = async () => {
+    setLinkGenerationInProgress(true);
     if (selectedProducts.length === 0) {
       setSnackbar({
         open: true,
@@ -185,7 +202,7 @@ const AdminPage = () => {
       });
 
       const data = await response.json();
-
+      setLinkGenerationInProgress(false);
       if (data.success) {
         const checkoutLink = `${window.location.origin}/checkout/${data.linkId}`;
         setGeneratedLink(checkoutLink);
@@ -356,7 +373,11 @@ const AdminPage = () => {
                 disabled={selectedProducts.length === 0}
                 sx={{ mt: 2 }}
               >
-                Generate Link
+                {linkGenerationInProgress ? (
+                  <CircularProgress size={24} color="white" />
+                ) : (
+                  "Generate Link"
+                )}
               </Button>
             </Box>
 
