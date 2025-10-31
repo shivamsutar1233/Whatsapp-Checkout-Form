@@ -309,7 +309,7 @@ function CheckoutForm() {
                             </Typography>
                             <Typography
                               variant="body2"
-                              className="text-gray-600"
+                              className="text-gray-600 overflow-clip max-h-10"
                             >
                               {product.description}
                             </Typography>
