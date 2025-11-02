@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import _ from "lodash";
 import Customize_KCKR001 from "./Customize_KCKR001";
+import Customize_KCNP002 from "./Customize_KCNP002";
 // import { randomUUID } from "crypto";
 
 function CheckoutForm({ activeStep }) {
@@ -279,10 +280,21 @@ function CheckoutForm({ activeStep }) {
           />
         );
 
+      case "KCNP002":
+        return (
+          <Customize_KCNP002
+            product={product}
+            orderId={productDetails.linkId}
+            setCustomizationDetails={setCustomizationDetails}
+          />
+        );
+
       default:
         return null;
     }
   };
+
+  console.log("customizationDetails:", customizationDetails);
   return (
     <Container maxWidth="sm" className="mt-8 px-4">
       <Paper className="p-4 md:p-6 shadow-lg">

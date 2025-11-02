@@ -32,7 +32,7 @@ const Customize_KCKR001 = ({ product, orderId, setCustomizationDetails }) => {
     }
     setCustomizationData(initialCustomizationData);
   }, [productDetails.quantity, orderId]);
-  const [selectMultiColor, setSelectMultiColor] = React.useState(false);
+  const [selectMultiCustom, setSelectMultiCustom] = React.useState(false);
 
   return (
     <TableContainer component={Paper}>
@@ -70,7 +70,7 @@ const Customize_KCKR001 = ({ product, orderId, setCustomizationDetails }) => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      onChange={(e) => setSelectMultiColor(e.target.checked)}
+                      onChange={(e) => setSelectMultiCustom(e.target.checked)}
                     />
                   }
                   label="I want to customize my each product"
@@ -78,7 +78,7 @@ const Customize_KCKR001 = ({ product, orderId, setCustomizationDetails }) => {
               </TableCell>
             </TableRow>
           )}
-          {selectMultiColor &&
+          {selectMultiCustom &&
             customizationData?.length > 1 &&
             customizationData.map((productDetail, index) => (
               <TableRow key={index}>
@@ -131,7 +131,7 @@ const Customize_KCKR001 = ({ product, orderId, setCustomizationDetails }) => {
                 </TableCell>
               </TableRow>
             ))}
-          {(customizationData?.length === 1 || !selectMultiColor) && (
+          {(customizationData?.length === 1 || !selectMultiCustom) && (
             <TableRow key={"single-customization"}>
               <TableCell colSpan={4}>
                 <FormControl fullWidth>
