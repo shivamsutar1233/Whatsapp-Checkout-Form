@@ -245,8 +245,14 @@ function CheckoutForm({ activeStep }) {
     return (
       <Container
         maxWidth="sm"
-        className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl"
+        className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl items-center flex flex-col"
       >
+        <img
+          src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
+          alt="Divarch Studio Logo"
+          style={{ height: 50, marginBottom: 20 }}
+        />
+
         {/* <Paper className="p-4 md:p-6 shadow-lg bg-transparent"> */}
         <Typography
           variant={isMobile ? "h5" : "h4"}
@@ -312,12 +318,19 @@ function CheckoutForm({ activeStep }) {
   return (
     <Container maxWidth="sm" className="mt-8 px-4">
       <Paper className="p-4 md:p-6 shadow-lg">
-        <Typography
-          variant={isMobile ? "h5" : "h4"}
-          className="mb-8! text-center text-gray-800"
-        >
-          WhatsApp Checkout
-        </Typography>
+        <div className="flex flex-col items-center">
+          <img
+            src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
+            alt="Divarch Studio Logo"
+            style={{ height: 50, marginBottom: 20 }}
+          />
+          <Typography
+            variant={isMobile ? "h5" : "h4"}
+            className="mb-8! text-center text-gray-800"
+          >
+            WhatsApp Checkout
+          </Typography>
+        </div>
 
         {loading ? (
           <Box className="flex justify-center items-center py-8">

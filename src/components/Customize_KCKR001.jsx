@@ -97,9 +97,9 @@ const Customize_KCKR001 = ({
                     #{index + 1}
                   </Typography>
                   <FormControl fullWidth className="flex-1 flex">
-                    <InputLabel id={`custom-color-${productDetail[1]}`}>
+                    {/* <InputLabel id={`custom-color-${productDetail[1]}`}>
                       Color
-                    </InputLabel>
+                    </InputLabel> */}
                     <Select
                       labelId={`custom-color-${productDetail[1]}`}
                       id={`custom-select-${productDetail[1]}`}
@@ -125,12 +125,10 @@ const Customize_KCKR001 = ({
                         >
                           <div className="flex items-center  gap-2">
                             <div
-                              className={`bg-${
-                                color.toString().toLowerCase() === "black" ||
-                                color.toString().toLowerCase() === "white"
-                                  ? color.toString().toLowerCase()
-                                  : color.toString().toLowerCase() + "-500"
-                              }  border border-gray-200 w-4 h-4 rounded-full ml-2`}
+                              style={{
+                                backgroundColor: color.toString().toLowerCase(),
+                              }}
+                              className={`border border-gray-200 w-4 h-4 rounded-full ml-2`}
                             />
                             <Typography variant="body2">{color}</Typography>{" "}
                           </div>
@@ -177,12 +175,10 @@ const Customize_KCKR001 = ({
                       <MenuItem key={color} value={color}>
                         <div className="flex items-center  gap-2">
                           <div
-                            className={`bg-${
-                              color.toString().toLowerCase() === "black" ||
-                              color.toString().toLowerCase() === "white"
-                                ? color.toString().toLowerCase()
-                                : color.toString().toLowerCase() + "-500"
-                            }  border border-gray-200 w-4 h-4 rounded-full ml-2`}
+                            style={{
+                              backgroundColor: color.toString().toLowerCase(),
+                            }}
+                            className={`border border-gray-200 w-4 h-4 rounded-full ml-2`}
                           />
                           <Typography variant="body2">{color}</Typography>{" "}
                         </div>
