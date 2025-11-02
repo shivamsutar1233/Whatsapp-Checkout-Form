@@ -10,16 +10,12 @@ import {
   useTheme,
   CircularProgress,
   Alert,
-  TableContainer,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
 } from "@mui/material";
+import _ from "lodash";
+import Customize_KCKR001 from "./Customize_KCKR001";
 // import { randomUUID } from "crypto";
 
-function CheckoutForm() {
+function CheckoutForm({ activeStep }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(true);
@@ -32,6 +28,7 @@ function CheckoutForm() {
   // Get linkId from URL path
   const path = window.location.pathname;
   const linkId = path.split("/").pop();
+  const [customizationDetails, setCustomizationDetails] = useState({});
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -176,6 +173,7 @@ function CheckoutForm() {
                   ? productDetails.products[0].name
                   : "",
                 orderId: linkId,
+                customizationDetails: customizationDetails,
               }),
             }).then(() =>
               fetch(`${BASE_API_URL}/update-payment-status`, {
@@ -265,6 +263,26 @@ function CheckoutForm() {
     );
   }
 
+  const groupedProductDetails = () => {
+    if (!productDetails) return null;
+    return _.groupBy(productDetails.products, (product) => product.SKU);
+  };
+  const getCustomizeComponent = (sku, product) => {
+    if (!productDetails) return null;
+    switch (sku) {
+      case "KCKR001":
+        return (
+          <Customize_KCKR001
+            product={product}
+            orderId={productDetails.linkId}
+            setCustomizationDetails={setCustomizationDetails}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
   return (
     <Container maxWidth="sm" className="mt-8 px-4">
       <Paper className="p-4 md:p-6 shadow-lg">
@@ -285,294 +303,236 @@ function CheckoutForm() {
           </Alert>
         ) : (
           <>
-            {productDetails && (
+            {productDetails && activeStep === 0 && (
               <Box className="mb-6">
-                <Typography variant="h6" className="text-gray-800 mb-3">
-                  Order Summary
-                </Typography>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Product</TableCell>
-                        <TableCell align="right">Price</TableCell>
-                        <TableCell align="right">Quantity</TableCell>
-                        <TableCell align="right">Total</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {productDetails.products.map((product, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Typography variant="subtitle2">
-                              {product.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              className="text-gray-600 overflow-clip max-h-10"
-                            >
-                              {product.description}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right">₹{product.price}</TableCell>
-                          <TableCell align="right">
-                            {product.quantity}
-                          </TableCell>
-                          <TableCell align="right">
-                            ₹{product.price * product.quantity}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                      <TableRow>
-                        <TableCell colSpan={3} align="right">
-                          <strong>Total Amount:</strong>
-                        </TableCell>
-                        <TableCell align="right">
-                          <strong>₹{productDetails.totalAmount}</strong>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                {Object.entries(groupedProductDetails()).map(([sku, product]) =>
+                  getCustomizeComponent(sku, product)
+                )}
               </Box>
             )}
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-4 flex flex-col gap-4"
-            >
-              <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  required
-                  inputProps={{
-                    pattern: "[0-9]{10}",
-                    maxLength: 10,
-                    title: "Please enter a valid 10-digit phone number",
-                  }}
-                  className="md:col-span-2"
-                  disabled={paymentInProgress}
-                />
-                <TextField
-                  fullWidth
-                  label="Email(optional)"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  type="email"
-                  className="md:col-span-2"
-                  disabled={paymentInProgress}
-                />
-
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={paymentInProgress}
-                />
-
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={paymentInProgress}
-                />
-              </Box>
-
-              {/* Shipping Address Section */}
-              <Typography variant="h6" className="text-gray-700 mt-4">
-                Shipping Address
-              </Typography>
-              <TextField
-                fullWidth
-                label="Address Line 1"
-                name="shippingAddressLine1"
-                value={formData.shippingAddressLine1}
-                onChange={handleInputChange}
-                required
-                multiline
-                rows={1}
-                className="mt-4"
-                disabled={paymentInProgress}
-              />
-              <TextField
-                fullWidth
-                label="Address Line 2"
-                name="shippingAddressLine2"
-                value={formData.shippingAddressLine2}
-                onChange={handleInputChange}
-                multiline
-                rows={1}
-                className="mt-4"
-                disabled={paymentInProgress}
-              />
-              <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <TextField
-                  fullWidth
-                  label="City"
-                  name="shippingCity"
-                  value={formData.shippingCity}
-                  onChange={handleInputChange}
-                  required
-                  disabled={paymentInProgress}
-                />
-                <TextField
-                  fullWidth
-                  label="State"
-                  name="shippingState"
-                  value={formData.shippingState}
-                  onChange={handleInputChange}
-                  required
-                  disabled={paymentInProgress}
-                />
-                <TextField
-                  fullWidth
-                  label="Pincode"
-                  name="shippingPincode"
-                  value={formData.shippingPincode}
-                  onChange={handleInputChange}
-                  required
-                  inputProps={{
-                    maxLength: 6,
-                  }}
-                  disabled={paymentInProgress}
-                />
-              </Box>
-
-              {/* Billing Address Section */}
-              <Box className="flex items-center mt-6 mb-4">
-                <Typography variant="h6" className="text-gray-700">
-                  Billing Address
-                </Typography>
-                <Box className="ml-4 flex items-center">
-                  <input
-                    type="checkbox"
-                    id="sameAsShipping"
-                    checked={sameAsShipping}
-                    onChange={(e) => {
-                      setSameAsShipping(e.target.checked);
-                      if (e.target.checked) {
-                        setFormData((prev) => ({
-                          ...prev,
-                          billingAddressLine1: prev.shippingAddressLine1,
-                          billingAddressLine2: prev.shippingAddressLine2,
-                          billingCity: prev.shippingCity,
-                          billingState: prev.shippingState,
-                          billingPincode: prev.shippingPincode,
-                        }));
-                      }
-                    }}
-                    className="w-4 h-4 mr-2"
-                  />
-                  <label
-                    htmlFor="sameAsShipping"
-                    className="text-sm text-gray-600"
-                  >
-                    Same as shipping address
-                  </label>
-                </Box>
-              </Box>
-
-              {!sameAsShipping && (
-                <>
+            {activeStep === 1 && (
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-4 flex flex-col gap-4"
+              >
+                <Box className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TextField
                     fullWidth
-                    label="Billing Address Line 1"
-                    name="billingAddressLine1"
-                    value={formData.billingAddressLine1}
+                    label="Phone Number"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleInputChange}
                     required
-                    multiline
-                    rows={1}
-                    className="mt-4"
+                    inputProps={{
+                      pattern: "[0-9]{10}",
+                      maxLength: 10,
+                      title: "Please enter a valid 10-digit phone number",
+                    }}
+                    className="md:col-span-2"
                     disabled={paymentInProgress}
                   />
                   <TextField
                     fullWidth
-                    label="Billing Address Line 2"
-                    name="billingAddressLine2"
-                    value={formData.billingAddressLine2}
+                    label="Email(optional)"
+                    name="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    multiline
-                    rows={1}
-                    className="mt-4"
+                    type="email"
+                    className="md:col-span-2"
                     disabled={paymentInProgress}
                   />
-                  <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <TextField
-                      fullWidth
-                      label="City"
-                      name="billingCity"
-                      value={formData.billingCity}
-                      onChange={handleInputChange}
-                      required
-                      disabled={paymentInProgress}
-                    />
-                    <TextField
-                      fullWidth
-                      label="State"
-                      name="billingState"
-                      value={formData.billingState}
-                      onChange={handleInputChange}
-                      required
-                      disabled={paymentInProgress}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Pincode"
-                      name="billingPincode"
-                      value={formData.billingPincode}
-                      onChange={handleInputChange}
-                      required
-                      disabled={paymentInProgress}
-                    />
-                  </Box>
-                </>
-              )}
 
-              {/* <Box className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center mt-4"> */}
-              {/* <TextField
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    required
+                    disabled={paymentInProgress}
+                  />
+
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    required
+                    disabled={paymentInProgress}
+                  />
+                </Box>
+
+                {/* Shipping Address Section */}
+                <Typography variant="h6" className="text-gray-700 mt-4">
+                  Shipping Address
+                </Typography>
+                <TextField
                   fullWidth
-                  label="Quantity"
-                  name="quantity"
-                  type="number"
-                  value={formData.quantity}
+                  label="Address Line 1"
+                  name="shippingAddressLine1"
+                  value={formData.shippingAddressLine1}
                   onChange={handleInputChange}
                   required
-                  inputProps={{
-                    min: 1,
-                  }}
-                /> */}
+                  multiline
+                  rows={1}
+                  className="mt-4"
+                  disabled={paymentInProgress}
+                />
+                <TextField
+                  fullWidth
+                  label="Address Line 2"
+                  name="shippingAddressLine2"
+                  value={formData.shippingAddressLine2}
+                  onChange={handleInputChange}
+                  multiline
+                  rows={1}
+                  className="mt-4"
+                  disabled={paymentInProgress}
+                />
+                <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <TextField
+                    fullWidth
+                    label="City"
+                    name="shippingCity"
+                    value={formData.shippingCity}
+                    onChange={handleInputChange}
+                    required
+                    disabled={paymentInProgress}
+                  />
+                  <TextField
+                    fullWidth
+                    label="State"
+                    name="shippingState"
+                    value={formData.shippingState}
+                    onChange={handleInputChange}
+                    required
+                    disabled={paymentInProgress}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Pincode"
+                    name="shippingPincode"
+                    value={formData.shippingPincode}
+                    onChange={handleInputChange}
+                    required
+                    inputProps={{
+                      maxLength: 6,
+                    }}
+                    disabled={paymentInProgress}
+                  />
+                </Box>
 
-              <Typography variant="h6" className="text-right text-gray-800">
-                Total: ₹{formData.totalAmount}
-              </Typography>
-              {/* </Box>. */}
+                {/* Billing Address Section */}
+                <Box className="flex items-center mt-6 mb-4">
+                  <Typography variant="h6" className="text-gray-700">
+                    Billing Address
+                  </Typography>
+                  <Box className="ml-4 flex items-center">
+                    <input
+                      type="checkbox"
+                      id="sameAsShipping"
+                      checked={sameAsShipping}
+                      onChange={(e) => {
+                        setSameAsShipping(e.target.checked);
+                        if (e.target.checked) {
+                          setFormData((prev) => ({
+                            ...prev,
+                            billingAddressLine1: prev.shippingAddressLine1,
+                            billingAddressLine2: prev.shippingAddressLine2,
+                            billingCity: prev.shippingCity,
+                            billingState: prev.shippingState,
+                            billingPincode: prev.shippingPincode,
+                          }));
+                        }
+                      }}
+                      className="w-4 h-4 mr-2"
+                    />
+                    <label
+                      htmlFor="sameAsShipping"
+                      className="text-sm text-gray-600"
+                    >
+                      Same as shipping address
+                    </label>
+                  </Box>
+                </Box>
 
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                className="mt-6 bg-blue-600 hover:bg-blue-700 py-3 text-lg"
-                disabled={!productDetails}
-              >
-                {paymentInProgress ? (
-                  <CircularProgress size={24} color="white" />
-                ) : (
-                  "Proceed to Pay"
+                {!sameAsShipping && (
+                  <>
+                    <TextField
+                      fullWidth
+                      label="Billing Address Line 1"
+                      name="billingAddressLine1"
+                      value={formData.billingAddressLine1}
+                      onChange={handleInputChange}
+                      required
+                      multiline
+                      rows={1}
+                      className="mt-4"
+                      disabled={paymentInProgress}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Billing Address Line 2"
+                      name="billingAddressLine2"
+                      value={formData.billingAddressLine2}
+                      onChange={handleInputChange}
+                      multiline
+                      rows={1}
+                      className="mt-4"
+                      disabled={paymentInProgress}
+                    />
+                    <Box className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <TextField
+                        fullWidth
+                        label="City"
+                        name="billingCity"
+                        value={formData.billingCity}
+                        onChange={handleInputChange}
+                        required
+                        disabled={paymentInProgress}
+                      />
+                      <TextField
+                        fullWidth
+                        label="State"
+                        name="billingState"
+                        value={formData.billingState}
+                        onChange={handleInputChange}
+                        required
+                        disabled={paymentInProgress}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Pincode"
+                        name="billingPincode"
+                        value={formData.billingPincode}
+                        onChange={handleInputChange}
+                        required
+                        disabled={paymentInProgress}
+                      />
+                    </Box>
+                  </>
                 )}
-              </Button>
-            </form>
+                <Typography variant="h6" className="text-right text-gray-800">
+                  Total: ₹{formData.totalAmount}
+                </Typography>
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  className="mt-6 bg-blue-600 hover:bg-blue-700 py-3 text-lg"
+                  disabled={!productDetails}
+                >
+                  {paymentInProgress ? (
+                    <CircularProgress size={24} color="white" />
+                  ) : (
+                    "Proceed to Pay"
+                  )}
+                </Button>
+              </form>
+            )}
           </>
         )}
       </Paper>
