@@ -14,6 +14,7 @@ import {
 import _ from "lodash";
 import Customize_KCKR001 from "./Customize_KCKR001";
 import Customize_KCNP002 from "./Customize_KCNP002";
+import Customize_KCNP003 from "./Customize_KCNP003";
 // import { randomUUID } from "crypto";
 
 function CheckoutForm({ activeStep }) {
@@ -281,8 +282,18 @@ function CheckoutForm({ activeStep }) {
         );
 
       case "KCNP002":
+      case "KCNP004":
         return (
           <Customize_KCNP002
+            product={product}
+            orderId={productDetails.linkId}
+            setCustomizationDetails={setCustomizationDetails}
+          />
+        );
+
+      case "KCNP003":
+        return (
+          <Customize_KCNP003
             product={product}
             orderId={productDetails.linkId}
             setCustomizationDetails={setCustomizationDetails}
@@ -431,6 +442,8 @@ function CheckoutForm({ activeStep }) {
                     required
                     inputProps={{
                       maxLength: 6,
+                      pattern: "[0-9]{6}",
+                      title: "Please enter a valid pincode",
                     }}
                     disabled={paymentInProgress}
                   />
@@ -522,6 +535,11 @@ function CheckoutForm({ activeStep }) {
                         onChange={handleInputChange}
                         required
                         disabled={paymentInProgress}
+                        inputProps={{
+                          maxLength: 6,
+                          pattern: "[0-9]{6}",
+                          title: "Please enter a valid pincode",
+                        }}
                       />
                     </Box>
                   </>

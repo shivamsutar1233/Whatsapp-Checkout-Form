@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React from "react";
 
-const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
+const Customize_KCNP003 = ({ product, orderId, setCustomizationDetails }) => {
   const productDetails = product[0];
   const [customizationData, setCustomizationData] = React.useState([]);
   React.useEffect(() => {
@@ -23,6 +23,7 @@ const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
         orderId,
         productDetails.SKU,
         `#${i + 1}`,
+        "",
         "",
       ]);
     }
@@ -87,9 +88,28 @@ const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
                     id={`custom-title-input-${productDetail[1]}-${index}`}
                     value={productDetail[3] || ""}
                     label="Customization Title"
+                    className="!mb-2"
                     onChange={(e) => {
                       const newCustomizationData = [...customizationData];
                       newCustomizationData[index][3] = e.target.value;
+                      setCustomizationData(newCustomizationData);
+                      setCustomizationDetails((prev) => ({
+                        ...prev,
+                        [`${productDetails.id}`]: newCustomizationData,
+                      }));
+                    }}
+                    fullWidth
+                    inputProps={{
+                      maxLength: 13,
+                    }}
+                  />
+                  <TextField
+                    id={`custom-phone-input-${productDetail[1]}-${index}`}
+                    value={productDetail[4] || ""}
+                    label="Customization Phone Number"
+                    onChange={(e) => {
+                      const newCustomizationData = [...customizationData];
+                      newCustomizationData[index][4] = e.target.value;
                       setCustomizationData(newCustomizationData);
                       setCustomizationDetails((prev) => ({
                         ...prev,
@@ -115,6 +135,7 @@ const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
                   inputProps={{
                     maxLength: 13,
                   }}
+                  className="!mb-2"
                   fullWidth
                   onChange={(e) => {
                     const newCustomizationData = [...customizationData];
@@ -132,6 +153,31 @@ const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
                     }));
                   }}
                 />
+                <TextField
+                  id={`single-custom-phone-input-${productDetails.id}`}
+                  value={customizationData[0]?.[4] || ""}
+                  label="Customization Phone Number"
+                  inputProps={{
+                    maxLength: 13,
+                  }}
+                  fullWidth
+                  onChange={(e) => {
+                    const newCustomizationData = [...customizationData];
+                    if (newCustomizationData.length === 1) {
+                      newCustomizationData[0][4] = e.target.value;
+                    } else {
+                      for (let i = 0; i < newCustomizationData.length; i++) {
+                        newCustomizationData[i][4] = e.target.value;
+                      }
+                    }
+
+                    setCustomizationData(newCustomizationData);
+                    setCustomizationDetails((prev) => ({
+                      ...prev,
+                      [`${productDetails.id}`]: newCustomizationData,
+                    }));
+                  }}
+                />
               </TableCell>
             </TableRow>
           )}
@@ -141,4 +187,4 @@ const Customize_KCNP002 = ({ product, orderId, setCustomizationDetails }) => {
   );
 };
 
-export default Customize_KCNP002;
+export default Customize_KCNP003;
