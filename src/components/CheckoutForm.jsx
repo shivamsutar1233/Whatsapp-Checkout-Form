@@ -47,7 +47,7 @@ function CheckoutForm({ activeStep }) {
         }
 
         const { data } = await response.json();
-        console.log(data);
+        // console.log(data);
 
         setProductDetails(data);
 
