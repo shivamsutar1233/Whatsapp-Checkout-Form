@@ -278,6 +278,7 @@ function CheckoutForm({ activeStep }) {
             product={product}
             orderId={productDetails.linkId}
             setCustomizationDetails={setCustomizationDetails}
+            customizationDetails={customizationDetails}
           />
         );
 
@@ -288,6 +289,7 @@ function CheckoutForm({ activeStep }) {
             product={product}
             orderId={productDetails.linkId}
             setCustomizationDetails={setCustomizationDetails}
+            customizationDetails={customizationDetails}
           />
         );
 
@@ -297,6 +299,7 @@ function CheckoutForm({ activeStep }) {
             product={product}
             orderId={productDetails.linkId}
             setCustomizationDetails={setCustomizationDetails}
+            customizationDetails={customizationDetails}
           />
         );
 

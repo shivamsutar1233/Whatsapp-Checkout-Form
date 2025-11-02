@@ -16,11 +16,21 @@ import {
 } from "@mui/material";
 import React from "react";
 
-const Customize_KCKR001 = ({ product, orderId, setCustomizationDetails }) => {
+const Customize_KCKR001 = ({
+  product,
+  orderId,
+  setCustomizationDetails,
+  customizationDetails,
+}) => {
   const productDetails = product[0];
   const [customizationData, setCustomizationData] = React.useState([]);
   React.useEffect(() => {
     const initialCustomizationData = [];
+    if (customizationDetails && customizationDetails[`${productDetails.id}`]) {
+      setCustomizationData(customizationDetails[`${productDetails.id}`]);
+      return;
+    }
+
     for (let i = 0; i < productDetails.quantity; i++) {
       initialCustomizationData.push([
         orderId,
