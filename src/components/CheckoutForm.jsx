@@ -17,7 +17,7 @@ import Customize_KCNP002 from "./Customize_KCNP002";
 import Customize_KCNP003 from "./Customize_KCNP003";
 // import { randomUUID } from "crypto";
 
-function CheckoutForm({ activeStep }) {
+function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(true);
@@ -109,7 +109,6 @@ function CheckoutForm({ activeStep }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setPaymentInProgress(true);
 
     try {
       // Prepare final form data including billing address
@@ -141,6 +140,8 @@ function CheckoutForm({ activeStep }) {
         image:
           "https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png", // You can add your logo URL here
         handler: async (response) => {
+          setPaymentInProgress(true);
+
           try {
             // Send data to backend
             const res = await fetch(`${BASE_API_URL}/saveToSheet`, {
@@ -195,6 +196,7 @@ function CheckoutForm({ activeStep }) {
               // Reset form
               setPaymentSuccessful(true);
               setPaymentInProgress(false);
+              setIsPaymentCompleted(true);
               setFormData({
                 phoneNumber: "",
                 email: "",

@@ -14,6 +14,7 @@ export default function CheckoutFlow() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
   const [productDetails, setProductDetails] = React.useState([]);
+  const [isPaymentCompleted, setIsPaymentCompleted] = React.useState(false);
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -58,7 +59,7 @@ export default function CheckoutFlow() {
         // console.log(data);
 
         setProductDetails(data);
-
+        setIsPaymentCompleted(data.paymentStatus === "PAID");
         setLoading(false);
       } catch (error) {
         console.error("Error fetching order details:", error);
@@ -67,14 +68,17 @@ export default function CheckoutFlow() {
     };
 
     fetchOrderDetails();
-  }, []);
+  }, [isPaymentCompleted]);
 
   return loading ? (
     <CircularProgress size={24} />
   ) : (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}></Stepper>
-      <CheckoutForm activeStep={activeStep} />
+      <CheckoutForm
+        activeStep={activeStep}
+        setIsPaymentCompleted={setIsPaymentCompleted}
+      />
       {productDetails?.paymentStatus !== "PAID" && (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
