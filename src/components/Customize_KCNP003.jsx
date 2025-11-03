@@ -97,6 +97,7 @@ const Customize_KCNP003 = ({
                     id={`custom-title-input-${productDetail[1]}-${index}`}
                     value={productDetail[3] || ""}
                     label="Customization Title"
+                    helperText="E.g. MH 45 AB 65XX or John Doe"
                     className="!mb-2"
                     onChange={(e) => {
                       const newCustomizationData = [...customizationData];
@@ -115,7 +116,7 @@ const Customize_KCNP003 = ({
                   <TextField
                     id={`custom-phone-input-${productDetail[1]}-${index}`}
                     value={productDetail[4] || ""}
-                    label="Customization Phone Number"
+                    label="Phone Number"
                     onChange={(e) => {
                       const newCustomizationData = [...customizationData];
                       newCustomizationData[index][4] = e.target.value;
@@ -141,6 +142,7 @@ const Customize_KCNP003 = ({
                   id={`single-custom-title-input-${productDetails.id}`}
                   value={customizationData[0]?.[3] || ""}
                   label="Customization Title"
+                  helperText="E.g. MH 45 AB 65XX or John Doe"
                   inputProps={{
                     maxLength: 13,
                   }}

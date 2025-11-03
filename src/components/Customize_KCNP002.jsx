@@ -107,6 +107,7 @@ const Customize_KCNP002 = ({
                         [`${productDetails.id}`]: newCustomizationData,
                       }));
                     }}
+                    helperText="E.g. MH 45 AB 65XX or John Doe"
                     fullWidth
                     inputProps={{
                       maxLength: 13,
@@ -126,6 +127,7 @@ const Customize_KCNP002 = ({
                   inputProps={{
                     maxLength: 13,
                   }}
+                  helperText="E.g. MH 45 AB 65XX or John Doe"
                   fullWidth
                   onChange={(e) => {
                     const newCustomizationData = [...customizationData];

@@ -10,11 +10,13 @@ import {
   useTheme,
   CircularProgress,
   Alert,
+  Divider,
 } from "@mui/material";
 import _ from "lodash";
 import Customize_KCKR001 from "./Customize_KCKR001";
 import Customize_KCNP002 from "./Customize_KCNP002";
 import Customize_KCNP003 from "./Customize_KCNP003";
+import Customize_KCKR005 from "./Customize_KCKR005";
 // import { randomUUID } from "crypto";
 
 function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
@@ -31,7 +33,32 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
   const path = window.location.pathname;
   const linkId = path.split("/").pop();
   const [customizationDetails, setCustomizationDetails] = useState({});
-
+  const [formData, setFormData] = useState({
+    phoneNumber: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    // Shipping Address
+    shippingAddressLine1: "",
+    shippingAddressLine2: "",
+    shippingCity: "",
+    shippingState: "",
+    shippingPincode: "",
+    // Billing Address
+    billingAddressLine1: "",
+    billingAddressLine2: "",
+    billingCity: "",
+    billingState: "",
+    billingPincode: "",
+    // Product details
+    productId: "",
+    productName: "",
+    quantity: 1,
+    cartTotalAmount: 0,
+    totalAmount: 0,
+    deliveryCharges: 50,
+    // orderId: randomUUID(),
+  });
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
@@ -54,7 +81,8 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
         // Update form with total amount
         setFormData((prev) => ({
           ...prev,
-          totalAmount: data.totalAmount,
+          cartTotalAmount: data.totalAmount,
+          totalAmount: data.totalAmount + prev.deliveryCharges,
         }));
 
         setLoading(false);
@@ -68,31 +96,6 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
     fetchOrderDetails();
   }, []);
 
-  const [formData, setFormData] = useState({
-    phoneNumber: "",
-    email: "",
-    firstName: "",
-    lastName: "",
-    // Shipping Address
-    shippingAddressLine1: "",
-    shippingAddressLine2: "",
-    shippingCity: "",
-    shippingState: "",
-    shippingPincode: "",
-    // Billing Address
-    billingAddressLine1: "",
-    billingAddressLine2: "",
-    billingCity: "",
-    billingState: "",
-    billingPincode: "",
-    // Product details
-    productId: "",
-    productName: "",
-    quantity: 1,
-    totalAmount: 0,
-    // orderId: randomUUID(),
-  });
-
   const [sameAsShipping, setSameAsShipping] = useState(true);
 
   const handleInputChange = (e) => {
@@ -102,7 +105,7 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
       [name]: value,
       ...(name === "quantity" &&
         productDetails && {
-          totalAmount: Number(value) * productDetails.price,
+          cartTotalAmount: Number(value) * productDetails.price,
         }),
     }));
   };
@@ -213,9 +216,10 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
                 billingState: "",
                 billingPincode: "",
                 quantity: 1,
-                totalAmount: productDetails ? productDetails.price : 0,
+                cartTotalAmount: productDetails ? productDetails.price : 0,
                 productId: productDetails ? productDetails.id : "",
                 productName: productDetails ? productDetails.name : "",
+                totalAmount: 0,
               });
               setSameAsShipping(true);
             } else {
@@ -304,6 +308,16 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
       case "KCNP003":
         return (
           <Customize_KCNP003
+            product={product}
+            orderId={productDetails.linkId}
+            setCustomizationDetails={setCustomizationDetails}
+            customizationDetails={customizationDetails}
+          />
+        );
+
+      case "KCKR005":
+        return (
+          <Customize_KCKR005
             product={product}
             orderId={productDetails.linkId}
             setCustomizationDetails={setCustomizationDetails}
@@ -562,8 +576,18 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
                     </Box>
                   </>
                 )}
+
                 <Typography variant="h6" className="text-right text-gray-800">
-                  Total: ₹{formData.totalAmount}
+                  Cart Total: ₹{formData.cartTotalAmount}
+                </Typography>
+                <Typography variant="h6" className="text-right text-gray-800">
+                  Delivery Charges: ₹{formData.deliveryCharges}
+                </Typography>
+
+                <Divider fullWidth />
+
+                <Typography variant="h6" className="text-right text-gray-800">
+                  Grand Total: ₹{formData.totalAmount}
                 </Typography>
 
                 <Button
