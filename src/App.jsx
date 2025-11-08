@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
+import LandingPage from "./pages/LandingPage";
 import "./App.css";
 import CheckoutFlow from "./pages/CheckoutFlow";
 
@@ -27,8 +28,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-gray-50">
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/admin" element={<AdminPage />} />
             {/* <Route path="/checkout/:linkId" element={<CheckoutForm />} /> */}
             <Route path="/checkout/:linkId" element={<CheckoutFlow />} />
