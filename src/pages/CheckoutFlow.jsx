@@ -16,6 +16,8 @@ export default function CheckoutFlow() {
   const [productDetails, setProductDetails] = React.useState([]);
   const [isPaymentCompleted, setIsPaymentCompleted] = React.useState(false);
 
+  const [disabled, setDisabled] = React.useState(true);
+
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
@@ -40,6 +42,7 @@ export default function CheckoutFlow() {
   // Get linkId from URL path
   const path = window.location.pathname;
   const linkId = path.split("/").pop();
+  console.log("disabled:", disabled);
 
   React.useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -77,6 +80,7 @@ export default function CheckoutFlow() {
       <Stepper activeStep={activeStep}></Stepper>
       <CheckoutForm
         activeStep={activeStep}
+        setDisabled={setDisabled}
         setIsPaymentCompleted={setIsPaymentCompleted}
       />
       {productDetails?.paymentStatus !== "PAID" && (
@@ -92,7 +96,7 @@ export default function CheckoutFlow() {
               Back
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} disabled={disabled}>
               {activeStep === steps.length - 1 ? "" : "Next"}
             </Button>
           </Box>

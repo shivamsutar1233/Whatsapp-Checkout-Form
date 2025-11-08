@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   TextField,
   Button,
@@ -17,9 +17,10 @@ import Customize_KCKR001 from "./Customize_KCKR001";
 import Customize_KCNP002 from "./Customize_KCNP002";
 import Customize_KCNP003 from "./Customize_KCNP003";
 import Customize_KCKR005 from "./Customize_KCKR005";
+import { isValidProductsList } from "../utils/validationFunctions";
 // import { randomUUID } from "crypto";
 
-function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
+function CheckoutForm({ activeStep, setIsPaymentCompleted, setDisabled }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(true);
@@ -329,8 +330,23 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted }) {
         return null;
     }
   };
+  useMemo(() => {
+    console.log("customizationDetails:", customizationDetails);
+    setDisabled(() => {
+      if (
+        Object.keys(customizationDetails).length !==
+        Object.keys(groupedProductDetails() || {}).length
+      ) {
+        return true;
+      }
+      return !Object.entries(customizationDetails).some(
+        ([sku, details]) =>
+          ["KCNP002", "KCNP004", "KCNP003"].includes(sku) &&
+          isValidProductsList(sku, details)
+      );
+    });
+  }, [customizationDetails, setDisabled, groupedProductDetails]);
 
-  console.log("customizationDetails:", customizationDetails);
   return (
     <Container maxWidth="sm" className="mt-8 px-4">
       <Paper className="p-4 md:p-6 shadow-lg">
