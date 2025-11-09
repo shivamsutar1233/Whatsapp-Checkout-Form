@@ -114,7 +114,7 @@ export default function CheckoutFlow() {
           <Stepper activeStep={activeStep} sx={{ mb: 4 }}></Stepper>
 
           {productDetails?.paymentStatus === "PAID" || paymentSuccessful ? (
-            <Container
+            <Box
               sx={{
                 p: 4,
                 backgroundColor: "#dde9f8",
@@ -123,6 +123,7 @@ export default function CheckoutFlow() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                width: "100%",
               }}
             >
               <img
@@ -156,7 +157,7 @@ export default function CheckoutFlow() {
                   orderDetails={orderDetails}
                 />
               </Box>
-            </Container>
+            </Box>
           ) : (
             <Box>
               <CheckoutForm

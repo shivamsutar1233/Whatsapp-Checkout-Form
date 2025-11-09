@@ -10,3 +10,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f9fafb;
 }
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem !important;
+}

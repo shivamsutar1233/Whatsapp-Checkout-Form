@@ -194,29 +194,39 @@ const OrderSummary = ({ products, cartTotalAmount, deliveryCharges }) => {
               {orderDetails.shippingAddress ? (
                 <Grid container>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.shippingAddress?.addressLine1},
-                    </Typography>
+                    {orderDetails?.shippingAddress?.addressLine1 && (
+                      <Typography variant="body2">
+                        {orderDetails?.shippingAddress?.addressLine1},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.shippingAddress?.addressLine2},
-                    </Typography>
+                    {orderDetails?.shippingAddress?.addressLine2 && (
+                      <Typography variant="body2">
+                        {orderDetails?.shippingAddress?.addressLine2},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.shippingAddress?.city},
-                    </Typography>
+                    {orderDetails?.shippingAddress?.city && (
+                      <Typography variant="body2">
+                        {orderDetails?.shippingAddress?.city},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.shippingAddress?.state},
-                    </Typography>
+                    {orderDetails?.shippingAddress?.state && (
+                      <Typography variant="body2">
+                        {orderDetails?.shippingAddress?.state},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.shippingAddress?.pincode}
-                    </Typography>
+                    {orderDetails?.shippingAddress?.pincode && (
+                      <Typography variant="body2">
+                        {orderDetails?.shippingAddress?.pincode}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
               ) : (
@@ -241,29 +251,39 @@ const OrderSummary = ({ products, cartTotalAmount, deliveryCharges }) => {
               {orderDetails.billingAddress ? (
                 <Grid container>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.billingAddress?.addressLine1},
-                    </Typography>
+                    {orderDetails?.billingAddress?.addressLine1 && (
+                      <Typography variant="body2">
+                        {orderDetails?.billingAddress?.addressLine1},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.billingAddress?.addressLine2},
-                    </Typography>
+                    {orderDetails?.billingAddress?.addressLine2 && (
+                      <Typography variant="body2">
+                        {orderDetails?.billingAddress?.addressLine2},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.billingAddress?.city},
-                    </Typography>
+                    {orderDetails?.billingAddress?.city && (
+                      <Typography variant="body2">
+                        {orderDetails?.billingAddress?.city},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.billingAddress?.state},
-                    </Typography>
+                    {orderDetails?.billingAddress?.state && (
+                      <Typography variant="body2">
+                        {orderDetails?.billingAddress?.state},
+                      </Typography>
+                    )}
                   </Grid>
                   <Grid item size={12} textAlign={"left"}>
-                    <Typography variant="body2">
-                      {orderDetails?.billingAddress?.pincode}
-                    </Typography>
+                    {orderDetails?.billingAddress?.pincode && (
+                      <Typography variant="body2">
+                        {orderDetails?.billingAddress?.pincode}
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
               ) : (
