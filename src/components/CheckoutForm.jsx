@@ -341,8 +341,9 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted, setDisabled }) {
       }
       return !Object.entries(customizationDetails).some(
         ([sku, details]) =>
-          ["KCNP002", "KCNP004", "KCNP003"].includes(sku) &&
-          isValidProductsList(sku, details)
+          (["KCNP002", "KCNP004", "KCNP003"].includes(sku) &&
+            isValidProductsList(sku, details)) ||
+          ["KCKR001", "KCKR005"].includes(sku)
       );
     });
   }, [customizationDetails, setDisabled, groupedProductDetails]);
