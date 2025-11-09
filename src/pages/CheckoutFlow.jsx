@@ -4,6 +4,7 @@ import Stepper from "@mui/material/Stepper";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CheckoutForm from "../components/CheckoutForm";
+import OrderSummary from "../components/OrderSummary";
 import {
   CircularProgress,
   Container,
@@ -17,10 +18,10 @@ export default function CheckoutFlow() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
   const [productDetails, setProductDetails] = React.useState([]);
   const [isPaymentCompleted, setIsPaymentCompleted] = React.useState(false);
   const [paymentSuccessful, setPaymentSuccessful] = React.useState(false);
+  const [orderDetails, setOrderDetails] = React.useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -66,79 +67,129 @@ export default function CheckoutFlow() {
         }
 
         const { data } = await response.json();
-        // console.log(data);
+
+        // Fetch shipping details if payment is completed
+        if (data.paymentStatus === "PAID") {
+          try {
+            const orderResponse = await fetch(
+              `${BASE_API_URL}/order/${linkId}`
+            );
+            if (orderResponse.ok) {
+              const orderData = await orderResponse.json();
+              setOrderDetails(orderData.data);
+            }
+          } catch (orderError) {
+            console.error("Error fetching order details:", orderError);
+          }
+        }
 
         setProductDetails(data);
         setIsPaymentCompleted(data.paymentStatus === "PAID");
         setLoading(false);
       } catch (error) {
         console.error("Error fetching order details:", error);
-        setError(error.message);
+        setLoading(false);
       }
     };
 
     fetchOrderDetails();
-  }, [isPaymentCompleted]);
+  }, [linkId, isPaymentCompleted]);
 
-  return loading ? (
-    <CircularProgress size={24} />
-  ) : (
-    <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}></Stepper>
-      {productDetails?.paymentStatus !== "PAID" ? (
-        <CheckoutForm
-          activeStep={activeStep}
-          setDisabled={setDisabled}
-          setIsPaymentCompleted={setIsPaymentCompleted}
-          setPaymentSuccessful={setPaymentSuccessful}
-          paymentSuccessful={paymentSuccessful}
-        />
-      ) : (
-        <Container
-          maxWidth="sm"
-          className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl items-center flex flex-col"
+  return (
+    <Container sx={{ py: 4 }}>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "200px",
+          }}
         >
-          <img
-            src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
-            alt="Divarch Studio Logo"
-            style={{ height: 50, marginBottom: 20 }}
-          />
+          <Stepper activeStep={activeStep}></Stepper>
+          <CircularProgress size={24} />
+        </Box>
+      ) : (
+        <Box sx={{ width: "100%", overflowX: "auto" }}>
+          <Stepper activeStep={activeStep} sx={{ mb: 4 }}></Stepper>
 
-          {/* <Paper className="p-4 md:p-6 shadow-lg bg-transparent"> */}
-          <Typography
-            variant={isMobile ? "h5" : "h4"}
-            className="mb-8! text-center text-gray-800"
-          >
-            Payment Successful
-          </Typography>
-          <Typography variant="body1" className="text-center text-blue-600">
-            Your orderId: {productDetails.linkId}
-          </Typography>
-          <Typography variant="body1" className="text-center text-green-00">
-            Thank you for your purchase! Your payment has already been received.
-          </Typography>
-          {/* </Paper> */}
-        </Container>
-      )}
-      {productDetails?.paymentStatus !== "PAID" && (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
+          {productDetails?.paymentStatus === "PAID" || paymentSuccessful ? (
+            <Container
+              sx={{
+                p: 4,
+                backgroundColor: "#dde9f8",
+                border: "1px solid #1E40AF",
+                borderRadius: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext} disabled={disabled}>
-              {activeStep === steps.length - 1 ? "" : "Next"}
-            </Button>
-          </Box>
-        </React.Fragment>
+              <img
+                src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
+                alt="Divarch Studio Logo"
+                style={{ height: 50, marginBottom: 20 }}
+              />
+              <Typography
+                variant={isMobile ? "h5" : "h4"}
+                sx={{ mb: 2, textAlign: "center", color: "#1F2937" }}
+              >
+                Payment Successful
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ textAlign: "center", color: "#2563EB", mb: 1 }}
+              >
+                Your orderId: {productDetails.linkId}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ textAlign: "center", color: "#047857" }}
+              >
+                Thank you for your purchase! Your payment has been received.
+              </Typography>
+              <Box sx={{ position: { md: "sticky" }, top: 24 }}>
+                <OrderSummary
+                  products={productDetails?.products || []}
+                  cartTotalAmount={productDetails?.totalAmount || 0}
+                  deliveryCharges={50}
+                  orderDetails={orderDetails}
+                />
+              </Box>
+            </Container>
+          ) : (
+            <Box>
+              <CheckoutForm
+                activeStep={activeStep}
+                setDisabled={setDisabled}
+                setIsPaymentCompleted={setIsPaymentCompleted}
+                setPaymentSuccessful={setPaymentSuccessful}
+                paymentSuccessful={paymentSuccessful}
+              />
+
+              <Box sx={{ mt: 4 }}>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  Step {activeStep + 1}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button
+                    color="inherit"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleNext} disabled={disabled}>
+                    {activeStep === steps.length - 1 ? "" : "Next"}
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </Box>
       )}
-    </Box>
+    </Container>
   );
 }
