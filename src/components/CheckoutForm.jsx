@@ -495,7 +495,7 @@ function CheckoutForm({
                       "Jammu and Kashmir",
                       "Ladakh",
                       "Lakshadweep",
-                      "Puducherry"
+                      "Puducherry",
                     ].map((state) => (
                       <MenuItem key={state} value={state}>
                         {state}
@@ -633,7 +633,7 @@ function CheckoutForm({
                           "Jammu and Kashmir",
                           "Ladakh",
                           "Lakshadweep",
-                          "Puducherry"
+                          "Puducherry",
                         ].map((state) => (
                           <MenuItem key={state} value={state}>
                             {state}
