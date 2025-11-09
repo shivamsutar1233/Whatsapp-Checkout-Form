@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Alert,
   Divider,
+  MenuItem,
 } from "@mui/material";
 import _ from "lodash";
 import Customize_KCKR001 from "./Customize_KCKR001";
@@ -449,6 +450,7 @@ function CheckoutForm({
                     disabled={paymentInProgress}
                   />
                   <TextField
+                    select
                     fullWidth
                     label="State"
                     name="shippingState"
@@ -456,7 +458,50 @@ function CheckoutForm({
                     onChange={handleInputChange}
                     required
                     disabled={paymentInProgress}
-                  />
+                  >
+                    {[
+                      "Andhra Pradesh",
+                      "Arunachal Pradesh",
+                      "Assam",
+                      "Bihar",
+                      "Chhattisgarh",
+                      "Goa",
+                      "Gujarat",
+                      "Haryana",
+                      "Himachal Pradesh",
+                      "Jharkhand",
+                      "Karnataka",
+                      "Kerala",
+                      "Madhya Pradesh",
+                      "Maharashtra",
+                      "Manipur",
+                      "Meghalaya",
+                      "Mizoram",
+                      "Nagaland",
+                      "Odisha",
+                      "Punjab",
+                      "Rajasthan",
+                      "Sikkim",
+                      "Tamil Nadu",
+                      "Telangana",
+                      "Tripura",
+                      "Uttar Pradesh",
+                      "Uttarakhand",
+                      "West Bengal",
+                      "Andaman and Nicobar Islands",
+                      "Chandigarh",
+                      "Dadra and Nagar Haveli and Daman and Diu",
+                      "Delhi",
+                      "Jammu and Kashmir",
+                      "Ladakh",
+                      "Lakshadweep",
+                      "Puducherry"
+                    ].map((state) => (
+                      <MenuItem key={state} value={state}>
+                        {state}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                   <TextField
                     fullWidth
                     label="Pincode"
@@ -543,6 +588,7 @@ function CheckoutForm({
                         disabled={paymentInProgress}
                       />
                       <TextField
+                        select
                         fullWidth
                         label="State"
                         name="billingState"
@@ -550,7 +596,50 @@ function CheckoutForm({
                         onChange={handleInputChange}
                         required
                         disabled={paymentInProgress}
-                      />
+                      >
+                        {[
+                          "Andhra Pradesh",
+                          "Arunachal Pradesh",
+                          "Assam",
+                          "Bihar",
+                          "Chhattisgarh",
+                          "Goa",
+                          "Gujarat",
+                          "Haryana",
+                          "Himachal Pradesh",
+                          "Jharkhand",
+                          "Karnataka",
+                          "Kerala",
+                          "Madhya Pradesh",
+                          "Maharashtra",
+                          "Manipur",
+                          "Meghalaya",
+                          "Mizoram",
+                          "Nagaland",
+                          "Odisha",
+                          "Punjab",
+                          "Rajasthan",
+                          "Sikkim",
+                          "Tamil Nadu",
+                          "Telangana",
+                          "Tripura",
+                          "Uttar Pradesh",
+                          "Uttarakhand",
+                          "West Bengal",
+                          "Andaman and Nicobar Islands",
+                          "Chandigarh",
+                          "Dadra and Nagar Haveli and Daman and Diu",
+                          "Delhi",
+                          "Jammu and Kashmir",
+                          "Ladakh",
+                          "Lakshadweep",
+                          "Puducherry"
+                        ].map((state) => (
+                          <MenuItem key={state} value={state}>
+                            {state}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                       <TextField
                         fullWidth
                         label="Pincode"
