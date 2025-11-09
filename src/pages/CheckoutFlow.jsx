@@ -4,7 +4,12 @@ import Stepper from "@mui/material/Stepper";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CheckoutForm from "../components/CheckoutForm";
-import { CircularProgress } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 const steps = ["Customize products", "Checkout details"];
 
@@ -15,6 +20,9 @@ export default function CheckoutFlow() {
   const [error, setError] = React.useState(null);
   const [productDetails, setProductDetails] = React.useState([]);
   const [isPaymentCompleted, setIsPaymentCompleted] = React.useState(false);
+  const [paymentSuccessful, setPaymentSuccessful] = React.useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [disabled, setDisabled] = React.useState(true);
 
@@ -42,7 +50,6 @@ export default function CheckoutFlow() {
   // Get linkId from URL path
   const path = window.location.pathname;
   const linkId = path.split("/").pop();
-  console.log("disabled:", disabled);
 
   React.useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -78,11 +85,41 @@ export default function CheckoutFlow() {
   ) : (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}></Stepper>
-      <CheckoutForm
-        activeStep={activeStep}
-        setDisabled={setDisabled}
-        setIsPaymentCompleted={setIsPaymentCompleted}
-      />
+      {productDetails?.paymentStatus !== "PAID" ? (
+        <CheckoutForm
+          activeStep={activeStep}
+          setDisabled={setDisabled}
+          setIsPaymentCompleted={setIsPaymentCompleted}
+          setPaymentSuccessful={setPaymentSuccessful}
+          paymentSuccessful={paymentSuccessful}
+        />
+      ) : (
+        <Container
+          maxWidth="sm"
+          className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl items-center flex flex-col"
+        >
+          <img
+            src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
+            alt="Divarch Studio Logo"
+            style={{ height: 50, marginBottom: 20 }}
+          />
+
+          {/* <Paper className="p-4 md:p-6 shadow-lg bg-transparent"> */}
+          <Typography
+            variant={isMobile ? "h5" : "h4"}
+            className="mb-8! text-center text-gray-800"
+          >
+            Payment Successful
+          </Typography>
+          <Typography variant="body1" className="text-center text-blue-600">
+            Your orderId: {productDetails.linkId}
+          </Typography>
+          <Typography variant="body1" className="text-center text-green-00">
+            Thank you for your purchase! Your payment has already been received.
+          </Typography>
+          {/* </Paper> */}
+        </Container>
+      )}
       {productDetails?.paymentStatus !== "PAID" && (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>

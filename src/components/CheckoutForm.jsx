@@ -20,13 +20,18 @@ import Customize_KCKR005 from "./Customize_KCKR005";
 import { isValidProductsList } from "../utils/validationFunctions";
 // import { randomUUID } from "crypto";
 
-function CheckoutForm({ activeStep, setIsPaymentCompleted, setDisabled }) {
+function CheckoutForm({
+  activeStep,
+  setIsPaymentCompleted,
+  setDisabled,
+  setPaymentSuccessful,
+  paymentSuccessful,
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [productDetails, setProductDetails] = useState(null);
-  const [paymentSuccessful, setPaymentSuccessful] = useState(false);
   const [paymentInProgress, setPaymentInProgress] = useState(false);
   // const BASE_API_URL = "http://localhost:5000/api";
   const BASE_API_URL = "https://whats-form-backend.vercel.app/api";
@@ -248,40 +253,11 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted, setDisabled }) {
     }
   };
 
-  if (productDetails?.paymentStatus === "PAID" || paymentSuccessful) {
-    return (
-      <Container
-        maxWidth="sm"
-        className="mt-8 px-4 p-4 md:p-6  bg-blue-200 border border-blue-800 rounded-4xl items-center flex flex-col"
-      >
-        <img
-          src="https://pxkxayc7bjdy4vc0.public.blob.vercel-storage.com/Divarch%20Studio/Brand/Div-Arch.in%20Brand%20Identity-1.png"
-          alt="Divarch Studio Logo"
-          style={{ height: 50, marginBottom: 20 }}
-        />
-
-        {/* <Paper className="p-4 md:p-6 shadow-lg bg-transparent"> */}
-        <Typography
-          variant={isMobile ? "h5" : "h4"}
-          className="mb-8! text-center text-gray-800"
-        >
-          Payment Successful
-        </Typography>
-        <Typography variant="body1" className="text-center text-blue-600">
-          Your orderId: {productDetails.linkId}
-        </Typography>
-        <Typography variant="body1" className="text-center text-green-00">
-          Thank you for your purchase! Your payment has already been received.
-        </Typography>
-        {/* </Paper> */}
-      </Container>
-    );
-  }
-
   const groupedProductDetails = () => {
     if (!productDetails) return null;
     return _.groupBy(productDetails.products, (product) => product.SKU);
   };
+
   const getCustomizeComponent = (sku, product) => {
     if (!productDetails) return null;
     switch (sku) {
@@ -331,7 +307,6 @@ function CheckoutForm({ activeStep, setIsPaymentCompleted, setDisabled }) {
     }
   };
   useMemo(() => {
-    console.log("customizationDetails:", customizationDetails);
     setDisabled(() => {
       if (
         Object.keys(customizationDetails).length !==
