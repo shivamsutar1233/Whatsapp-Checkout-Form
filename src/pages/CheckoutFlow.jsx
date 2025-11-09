@@ -117,8 +117,8 @@ export default function CheckoutFlow() {
             <Box
               sx={{
                 p: 4,
-                backgroundColor: "#dde9f8",
-                border: "1px solid #1E40AF",
+                // backgroundColor: "#dde9f8",
+                // border: "1px solid #1E40AF",
                 borderRadius: 2,
                 display: "flex",
                 flexDirection: "column",
