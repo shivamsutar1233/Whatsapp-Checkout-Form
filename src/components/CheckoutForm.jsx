@@ -168,7 +168,7 @@ function CheckoutForm({
                   : 0,
                 SKU: productDetails ? productDetails.products[0].SKU : "",
                 weightOfShipment: productDetails
-                  ? productDetails.products[0].weight
+                  ? productDetails.products[0].weight?.split(" ")[0]
                   : 0,
                 lengthOfShipment: productDetails
                   ? productDetails.products[0].length
@@ -187,6 +187,8 @@ function CheckoutForm({
                   : "",
                 orderId: linkId,
                 customizationDetails: customizationDetails,
+                PaymentMethod: "Prepaid",
+                COD: "No",
               }),
             }).then(() =>
               fetch(`${BASE_API_URL}/update-payment-status`, {
