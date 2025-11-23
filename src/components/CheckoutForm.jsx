@@ -185,6 +185,7 @@ function CheckoutForm({
                 productName: productDetails
                   ? productDetails.products[0].name
                   : "",
+                products: productDetails,
                 orderId: linkId,
                 customizationDetails: customizationDetails,
                 PaymentMethod: "Prepaid",
