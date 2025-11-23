@@ -96,7 +96,7 @@ const Customize_KCNP003 = ({
                   <TextField
                     id={`custom-title-input-${productDetail[1]}-${index}`}
                     value={productDetail[3] || ""}
-                    label="Customization Title"
+                    label="Customization Title (Case sensitive)"
                     helperText="E.g. MH 45 AB 65XX or John Doe"
                     className="!mb-2"
                     onChange={(e) => {
@@ -141,7 +141,7 @@ const Customize_KCNP003 = ({
                 <TextField
                   id={`single-custom-title-input-${productDetails.id}`}
                   value={customizationData[0]?.[3] || ""}
-                  label="Customization Title"
+                  label="Customization Title (Case sensitive)"
                   helperText="E.g. MH 45 AB 65XX or John Doe"
                   inputProps={{
                     maxLength: 13,

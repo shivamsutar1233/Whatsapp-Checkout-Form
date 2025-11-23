@@ -97,7 +97,7 @@ const Customize_KCNP002 = ({
                   <TextField
                     id={`custom-title-input-${productDetail[1]}-${index}`}
                     value={productDetail[3] || ""}
-                    label="Customization Title"
+                    label="Customization Title (Case sensitive)"
                     onChange={(e) => {
                       const newCustomizationData = [...customizationData];
                       newCustomizationData[index][3] = e.target.value;
@@ -123,7 +123,7 @@ const Customize_KCNP002 = ({
                 <TextField
                   id={`single-custom-title-input-${productDetails.id}`}
                   value={customizationData[0]?.[3] || ""}
-                  label="Customization Title"
+                  label="Customization Title (Case sensitive)"
                   inputProps={{
                     maxLength: 13,
                   }}
