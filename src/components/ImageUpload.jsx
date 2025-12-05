@@ -220,22 +220,6 @@ const ImageUpload = ({ onImageUpload }) => {
         </label>
       </Box>
 
-      {preview && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "600" }}>
-            Preview
-          </Typography>
-          <Card sx={{ maxWidth: 300 }}>
-            <CardMedia
-              component="img"
-              height="200"
-              image={preview}
-              alt="Preview"
-            />
-          </Card>
-        </Box>
-      )}
-
       {blobUrl && (
         <Box sx={{ mt: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "600" }}>
@@ -261,6 +245,21 @@ const ImageUpload = ({ onImageUpload }) => {
           >
             Copy URL
           </Button>
+        </Box>
+      )}
+      {(preview || blobUrl) && (
+        <Box sx={{ mt: 3 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "600" }}>
+            Preview
+          </Typography>
+          <Card sx={{ maxWidth: 300 }}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={preview || blobUrl}
+              alt="Preview"
+            />
+          </Card>
         </Box>
       )}
 
