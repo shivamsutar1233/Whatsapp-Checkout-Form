@@ -8,18 +8,18 @@ import { put } from "@vercel/blob";
 const getBlobToken = () => {
   // Check if running on Vercel (production)
   const isVercelEnv = process.env.VERCEL === "1" || import.meta.env.PROD;
-  
+
   // In development, use VITE_ prefixed variable
   // In production on Vercel, the token is automatically available
   const token = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
-  
+
   console.log("Environment check:", {
     isVercelEnv,
     isDev: import.meta.env.DEV,
     isProd: import.meta.env.PROD,
     tokenExists: !!token,
   });
-  
+
   return token;
 };
 
@@ -63,12 +63,12 @@ export const uploadImageToBlob = async (file) => {
 
     // Get token from environment - automatically handles dev and production
     const token = getBlobToken();
-    
+
     if (!token) {
       throw new Error(
         "Vercel Blob token not configured. " +
-        "Development: Set VITE_BLOB_READ_WRITE_TOKEN in .env. " +
-        "Production: Set VERCEL_BLOB_READ_WRITE_TOKEN in Vercel environment variables."
+          "Development: Set VITE_BLOB_READ_WRITE_TOKEN in .env. " +
+          "Production: Set VERCEL_BLOB_READ_WRITE_TOKEN in Vercel environment variables."
       );
     }
 
@@ -122,10 +122,9 @@ export const checkBlobConfiguration = async () => {
   if (!token) {
     return {
       configured: false,
-      message: 
-        import.meta.env.DEV
-          ? "Development: VITE_BLOB_READ_WRITE_TOKEN is not set in .env file"
-          : "Production: VERCEL_BLOB_READ_WRITE_TOKEN is not configured in Vercel environment variables",
+      message: import.meta.env.DEV
+        ? "Development: VITE_BLOB_READ_WRITE_TOKEN is not set in .env file"
+        : "Production: VERCEL_BLOB_READ_WRITE_TOKEN is not configured in Vercel environment variables",
     };
   }
 
