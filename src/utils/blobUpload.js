@@ -84,7 +84,6 @@ export const uploadImageGetUrl = async (file) => {
  */
 export const checkBlobConfiguration = async () => {
   const token = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
-  console.log("Blob token:", token);
   if (!token) {
     return {
       configured: false,
