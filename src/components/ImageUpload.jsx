@@ -20,7 +20,11 @@ const ImageUpload = ({ onImageUpload }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [configError, setConfigError] = useState(false);
-  const [toast, setToast] = useState({ open: false, message: "", type: "success" });
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    type: "success",
+  });
 
   // Check if Vercel Blob is configured on component mount
   useEffect(() => {
@@ -112,7 +116,11 @@ const ImageUpload = ({ onImageUpload }) => {
   const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(blobUrl);
-      setToast({ open: true, message: "URL copied to clipboard!", type: "success" });
+      setToast({
+        open: true,
+        message: "URL copied to clipboard!",
+        type: "success",
+      });
     } catch (err) {
       setToast({ open: true, message: "Failed to copy URL", type: "error" });
     }
