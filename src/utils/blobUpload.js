@@ -1,6 +1,29 @@
 import { put } from "@vercel/blob";
 
 /**
+ * Get the Vercel Blob token based on environment
+ * Development: Uses VITE_BLOB_READ_WRITE_TOKEN
+ * Production: Uses VERCEL_BLOB_READ_WRITE_TOKEN (Vercel automatically makes it available)
+ */
+const getBlobToken = () => {
+  // Check if running on Vercel (production)
+  const isVercelEnv = process.env.VERCEL === "1" || import.meta.env.PROD;
+  
+  // In development, use VITE_ prefixed variable
+  // In production on Vercel, the token is automatically available
+  const token = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
+  
+  console.log("Environment check:", {
+    isVercelEnv,
+    isDev: import.meta.env.DEV,
+    isProd: import.meta.env.PROD,
+    tokenExists: !!token,
+  });
+  
+  return token;
+};
+
+/**
  * Upload an image file to Vercel Blob Storage using the official SDK
  * @param {File} file - The image file to upload
  * @returns {Promise<{success: boolean, blobUrl: string, error?: string}>}
@@ -38,10 +61,21 @@ export const uploadImageToBlob = async (file) => {
 
     console.log("Starting blob upload:", filename);
 
+    // Get token from environment - automatically handles dev and production
+    const token = getBlobToken();
+    
+    if (!token) {
+      throw new Error(
+        "Vercel Blob token not configured. " +
+        "Development: Set VITE_BLOB_READ_WRITE_TOKEN in .env. " +
+        "Production: Set VERCEL_BLOB_READ_WRITE_TOKEN in Vercel environment variables."
+      );
+    }
+
     // Upload using Vercel Blob SDK
     const blob = await put(`/product_images/${filename}`, file, {
       access: "public",
-      token: import.meta.env.VITE_BLOB_READ_WRITE_TOKEN,
+      token: token,
     });
 
     console.log("Image uploaded successfully:", blob.url);
@@ -83,13 +117,15 @@ export const uploadImageGetUrl = async (file) => {
  * @returns {Promise<{configured: boolean, message: string}>}
  */
 export const checkBlobConfiguration = async () => {
-  const token = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
+  const token = getBlobToken();
 
   if (!token) {
     return {
       configured: false,
-      message:
-        "VITE_VERCEL_BLOB_READ_WRITE_TOKEN environment variable is not set",
+      message: 
+        import.meta.env.DEV
+          ? "Development: VITE_BLOB_READ_WRITE_TOKEN is not set in .env file"
+          : "Production: VERCEL_BLOB_READ_WRITE_TOKEN is not configured in Vercel environment variables",
     };
   }
 
