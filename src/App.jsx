@@ -2,6 +2,7 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPage from "./pages/AdminPage";
 import LandingPage from "./pages/LandingPage";
+import ImageUploadPage from "./pages/ImageUploadPage";
 import "./App.css";
 import CheckoutFlow from "./pages/CheckoutFlow";
 
@@ -32,6 +33,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/upload" element={<ImageUploadPage />} />
             {/* <Route path="/checkout/:linkId" element={<CheckoutForm />} /> */}
             <Route path="/checkout/:linkId" element={<CheckoutFlow />} />
           </Routes>
