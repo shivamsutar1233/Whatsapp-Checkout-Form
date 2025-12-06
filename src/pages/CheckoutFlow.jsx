@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import CustomOrderSummary from "../components/CustomOrderSummary";
 
 const steps = ["Customize products", "Checkout details"];
 
@@ -82,9 +83,9 @@ export default function CheckoutFlow() {
             console.error("Error fetching order details:", orderError);
           }
         }
-
         setProductDetails(data);
         setIsPaymentCompleted(data.paymentStatus === "PAID");
+        setDisabled((prev) => (data.isCustomOrder ? false : prev));
         setLoading(false);
       } catch (error) {
         console.error("Error fetching order details:", error);
@@ -150,12 +151,25 @@ export default function CheckoutFlow() {
                 Thank you for your purchase! Your payment has been received.
               </Typography>
               <Box sx={{ position: { md: "sticky" }, top: 24 }}>
-                <OrderSummary
-                  products={productDetails?.products || []}
-                  cartTotalAmount={productDetails?.totalAmount || 0}
-                  deliveryCharges={50}
-                  orderDetails={orderDetails}
-                />
+                {productDetails?.isCustomOrder ? (
+                  <CustomOrderSummary
+                    orderData={productDetails.customOrderDetails}
+                    orderDetails={orderDetails}
+                    loading={loading}
+                    cartTotalAmount={productDetails?.customOrderDetails[0][12]}
+                    deliveryCharges={50}
+                    totalAmount={
+                      Number(productDetails?.customOrderDetails[0][12]) + 50
+                    }
+                  />
+                ) : (
+                  <OrderSummary
+                    products={productDetails?.products || []}
+                    cartTotalAmount={productDetails?.totalAmount || 0}
+                    deliveryCharges={50}
+                    orderDetails={orderDetails}
+                  />
+                )}
               </Box>
             </Box>
           ) : (

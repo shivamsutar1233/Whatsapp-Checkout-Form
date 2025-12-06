@@ -19,6 +19,7 @@ import Customize_KCNP002 from "./Customize_KCNP002";
 import Customize_KCNP003 from "./Customize_KCNP003";
 import Customize_KCKR005 from "./Customize_KCKR005";
 import { isValidProductsList } from "../utils/validationFunctions";
+import OrderDetailsComponent from "./OrderDetailsComponent";
 // import { randomUUID } from "crypto";
 
 function CheckoutForm({
@@ -84,12 +85,20 @@ function CheckoutForm({
         // console.log(data);
 
         setProductDetails(data);
+        setDisabled((prev) => (data.isCustomOrder ? false : prev));
 
         // Update form with total amount
         setFormData((prev) => ({
           ...prev,
-          cartTotalAmount: data.totalAmount,
-          totalAmount: data.totalAmount + prev.deliveryCharges,
+          cartTotalAmount: data?.isCustomOrder
+            ? data.customOrderDetails[0][12]
+            : data.totalAmount,
+          totalAmount:
+            Number(
+              data?.isCustomOrder
+                ? data.customOrderDetails[0][12]
+                : data.totalAmount
+            ) + prev.deliveryCharges,
         }));
 
         setLoading(false);
@@ -163,31 +172,43 @@ function CheckoutForm({
                 ...finalFormData,
                 paymentId: response.razorpay_payment_id,
                 timestamp: new Date().toISOString(),
-                unitPrice: productDetails
-                  ? productDetails.products[0].price
-                  : 0,
-                SKU: productDetails ? productDetails.products[0].SKU : "",
-                weightOfShipment: productDetails
-                  ? productDetails.products[0].weight?.split(" ")[0]
-                  : 0,
-                lengthOfShipment: productDetails
-                  ? productDetails.products[0].length
-                  : 0,
-                breadthOfShipment: productDetails
-                  ? productDetails.products[0].breadth
-                  : 0,
-                heightOfShipment: productDetails
-                  ? productDetails.products[0].height
-                  : 0,
-                isThisMultipleProductOrder: productDetails
-                  ? productDetails.products.length > 1
-                  : false,
-                productName: productDetails
-                  ? productDetails.products[0].name
-                  : "",
-                products: productDetails?.products,
+                // unitPrice: productDetails
+                //   ? productDetails.products[0].price
+                //   : 0,
+                // SKU: productDetails ? productDetails.products[0].SKU : "",
+                // weightOfShipment: productDetails
+                //   ? productDetails.products[0].weight?.split(" ")[0]
+                //   : 0,
+                // lengthOfShipment: productDetails
+                //   ? productDetails.products[0].length
+                //   : 0,
+                // breadthOfShipment: productDetails
+                //   ? productDetails.products[0].breadth
+                //   : 0,
+                // heightOfShipment: productDetails
+                //   ? productDetails.products[0].height
+                //   : 0,
+                isThisMultipleProductOrder:
+                  productDetails && !productDetails.isCustomOrder
+                    ? productDetails.products.length > 1
+                    : false,
+                // productName: productDetails
+                //   ? productDetails.products[0].name
+                //   : "",
+                products: productDetails?.isCustomOrder
+                  ? [
+                      {
+                        name: productDetails.customOrderDetails[0][1],
+                        quantity: 1,
+                        price: productDetails.customOrderDetails[0][12],
+                        SKU: "CUSTOM",
+                      },
+                    ]
+                  : productDetails?.products,
                 orderId: linkId,
-                customizationDetails: customizationDetails,
+                customizationDetails: productDetails?.isCustomOrder
+                  ? customizationDetails
+                  : {},
                 PaymentMethod: "Prepaid",
                 COD: "No",
               }),
@@ -314,15 +335,19 @@ function CheckoutForm({
     setDisabled(() => {
       if (
         Object.keys(customizationDetails).length !==
-        Object.keys(groupedProductDetails() || {}).length
+          Object.keys(groupedProductDetails() || {}).length &&
+        !productDetails?.isCustomOrder
       ) {
         return true;
       }
-      return !Object.entries(customizationDetails).some(
-        ([sku, details]) =>
-          (["KCNP002", "KCNP004", "KCNP003"].includes(sku) &&
-            isValidProductsList(sku, details)) ||
-          ["KCKR001", "KCKR005"].includes(sku)
+      return (
+        !productDetails?.isCustomOrder &&
+        !Object.entries(customizationDetails).some(
+          ([sku, details]) =>
+            (["KCNP002", "KCNP004", "KCNP003"].includes(sku) &&
+              isValidProductsList(sku, details)) ||
+            ["KCKR001", "KCKR005"].includes(sku)
+        )
       );
     });
   }, [customizationDetails, setDisabled, groupedProductDetails]);
@@ -356,8 +381,14 @@ function CheckoutForm({
           <>
             {productDetails && activeStep === 0 && (
               <Box className="mb-6">
-                {Object.entries(groupedProductDetails()).map(([sku, product]) =>
-                  getCustomizeComponent(sku, product)
+                {productDetails?.isCustomOrder ? (
+                  <OrderDetailsComponent
+                    orderData={productDetails.customOrderDetails}
+                  />
+                ) : (
+                  Object.entries(groupedProductDetails()).map(
+                    ([sku, product]) => getCustomizeComponent(sku, product)
+                  )
                 )}
               </Box>
             )}
