@@ -206,7 +206,7 @@ function CheckoutForm({
                     ]
                   : productDetails?.products,
                 orderId: linkId,
-                customizationDetails: productDetails?.isCustomOrder
+                customizationDetails: !productDetails?.isCustomOrder
                   ? customizationDetails
                   : {},
                 PaymentMethod: "Prepaid",
