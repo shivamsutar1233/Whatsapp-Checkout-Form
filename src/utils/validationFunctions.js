@@ -11,6 +11,10 @@ export const isValidProductsList = (key, details) => {
         return [3, 4];
       case "KCNP004":
         return [3];
+      case "DPSW006":
+        return [3, 4];
+      case "LPSW007":
+        return [3, 4, 5];
       default:
         return [];
     }

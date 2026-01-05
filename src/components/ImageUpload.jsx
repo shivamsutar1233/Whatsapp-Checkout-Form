@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import {
   Box,
   Button,
@@ -13,7 +13,12 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { uploadImageGetUrl, checkBlobConfiguration } from "../utils/blobUpload";
 
-const ImageUpload = ({ onImageUpload }) => {
+const ImageUpload = ({
+  onImageUpload,
+  isAdminImageUpload = false,
+  uploadedImageURL,
+  key,
+}) => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState(null);
   const [blobUrl, setBlobUrl] = useState(null);
@@ -25,7 +30,7 @@ const ImageUpload = ({ onImageUpload }) => {
     message: "",
     type: "success",
   });
-
+  const imageUploadId = useId();
   // Check if Vercel Blob is configured on component mount
   useEffect(() => {
     const checkConfig = async () => {
@@ -134,7 +139,7 @@ const ImageUpload = ({ onImageUpload }) => {
   };
 
   return (
-    <Paper elevation={1} sx={{ p: 3, mb: 3 }}>
+    <Paper elevation={1} sx={{ p: 3, mb: 3 }} key={key}>
       <Typography
         variant="h6"
         gutterBottom
@@ -152,9 +157,11 @@ const ImageUpload = ({ onImageUpload }) => {
       {success && blobUrl && (
         <Alert severity="success" sx={{ mb: 2 }}>
           Image uploaded successfully!
-          <Typography variant="caption" component="div" sx={{ mt: 1 }}>
-            URL: <code>{blobUrl}</code>
-          </Typography>
+          {isAdminImageUpload && (
+            <Typography variant="caption" component="div" sx={{ mt: 1 }}>
+              URL: <code>{blobUrl}</code>
+            </Typography>
+          )}
         </Alert>
       )}
 
@@ -179,14 +186,14 @@ const ImageUpload = ({ onImageUpload }) => {
         <input
           accept="image/*"
           hidden
-          id="image-input"
+          id={imageUploadId}
           type="file"
           onChange={handleFileSelect}
           disabled={loading}
         />
 
         <label
-          htmlFor="image-input"
+          htmlFor={imageUploadId}
           style={{ cursor: "pointer", width: "100%" }}
         >
           <Box
@@ -220,7 +227,7 @@ const ImageUpload = ({ onImageUpload }) => {
         </label>
       </Box>
 
-      {blobUrl && (
+      {isAdminImageUpload && blobUrl && (
         <Box sx={{ mt: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "600" }}>
             Uploaded Image URL
@@ -247,7 +254,7 @@ const ImageUpload = ({ onImageUpload }) => {
           </Button>
         </Box>
       )}
-      {(preview || blobUrl) && (
+      {(preview || blobUrl || uploadedImageURL) && (
         <Box sx={{ mt: 3 }}>
           <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "600" }}>
             Preview
@@ -256,7 +263,7 @@ const ImageUpload = ({ onImageUpload }) => {
             <CardMedia
               component="img"
               height="200"
-              image={preview || blobUrl}
+              image={preview || blobUrl || uploadedImageURL}
               alt="Preview"
             />
           </Card>

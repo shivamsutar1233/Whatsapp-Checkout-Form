@@ -21,6 +21,7 @@ import Customize_KCKR005 from "./Customize_KCKR005";
 import { isValidProductsList } from "../utils/validationFunctions";
 import OrderDetailsComponent from "./OrderDetailsComponent";
 import Customize_DPSW006 from "./Customize_DPSW006";
+import Customize_LPSW007 from "./Customize_LPSW007";
 // import { randomUUID } from "crypto";
 
 function CheckoutForm({
@@ -281,7 +282,11 @@ function CheckoutForm({
 
   const groupedProductDetails = () => {
     if (!productDetails) return null;
-    return _.groupBy(productDetails.products, (product) => product.SKU);
+    const groupedProducts = _.groupBy(
+      productDetails.products,
+      (product) => product.SKU
+    );
+    return groupedProducts;
   };
 
   const getCustomizeComponent = (sku, product) => {
@@ -336,6 +341,17 @@ function CheckoutForm({
             customizationDetails={customizationDetails}
           />
         );
+
+      case "LPSW007":
+        return (
+          <Customize_LPSW007
+            product={product}
+            orderId={productDetails.linkId}
+            setCustomizationDetails={setCustomizationDetails}
+            customizationDetails={customizationDetails}
+          />
+        );
+
       default:
         return null;
     }
@@ -353,7 +369,9 @@ function CheckoutForm({
         !productDetails?.isCustomOrder &&
         !Object.entries(customizationDetails).some(
           ([sku, details]) =>
-            (["KCNP002", "KCNP004", "KCNP003", "DPSW006"].includes(sku) &&
+            (["KCNP002", "KCNP004", "KCNP003", "DPSW006", "LPSW007"].includes(
+              sku
+            ) &&
               isValidProductsList(sku, details)) ||
             ["KCKR001", "KCKR005"].includes(sku)
         )
