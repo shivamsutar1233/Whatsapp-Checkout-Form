@@ -24,7 +24,7 @@ const ImageUploadPage = () => {
       </Box>
 
       {/* Main Content */}
-      <ImageUpload />
+      <ImageUpload isAdminImageUpload/>
 
       {/* Usage Info */}
       <Paper elevation={1} sx={{ p: 3, mt: 3, backgroundColor: "#f0f9ff" }}>
